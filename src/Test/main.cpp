@@ -1,28 +1,40 @@
-#include <ctime>
-#include <iostream>
+#define CRUZ3D_IMPL
+#include <Cruz3D/Cruz3D.h>
+#undef CRUZ3D_IMPL
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-int main()
+static void sokol_init()
 {
-    try
-    {
-        glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    sg_setup({
+        .logger = {.func = slog_func},
+        .environment = sglue_environment(),
+    });
+}
 
-        glm::vec3 targetPos = glm::vec3(0.0f, 0.0f, 0.0f);
+static void sokol_frame()
+{
+}
 
-        // Up vector (defines the "up" direction of the camera)
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+static void sokol_cleanup()
+{
+    sg_shutdown();
+}
 
-        // Calculate the lookAt matrix
-        glm::mat4 viewMatrix = glm::lookAt(cameraPos, targetPos, up);
+static void sokol_event(const sapp_event *)
+{
+}
 
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
+sapp_desc sokol_main(int argc, char *argv[])
+{
+    (void)argc;
+    (void)argv;
 
-    return EXIT_SUCCESS;
+    return {.init_cb = sokol_init,
+            .frame_cb = sokol_frame,
+            .cleanup_cb = sokol_cleanup,
+            .event_cb = sokol_event,
+            .width = 640,
+            .height = 480,
+            .logger = {.func = slog_func}};
 }

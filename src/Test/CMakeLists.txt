@@ -4,5 +4,8 @@ file(GLOB_RECURSE SOURCE_FILES
 )
 
 add_executable(cruz3d-test "${SOURCE_FILES}")
+target_compile_options(cruz3d-test PRIVATE "${CRUZ_CXX_FLAGS}")
+
 target_include_directories(cruz3d-test PRIVATE "..")
+
 target_link_libraries(cruz3d-test cruz3d-common)
