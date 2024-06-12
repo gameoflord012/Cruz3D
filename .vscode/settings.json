@@ -1,6 +1,7 @@
 {
     "files.associations": {
         ".fantomasignore": "ignore",
-        "xiosbase": "cpp"
+        "xiosbase": "cpp",
+        "filesystem": "cpp"
     }
 }
