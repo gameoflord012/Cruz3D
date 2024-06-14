@@ -2,6 +2,7 @@
     "files.associations": {
         ".fantomasignore": "ignore",
         "xiosbase": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "xstring": "cpp"
     }
 }

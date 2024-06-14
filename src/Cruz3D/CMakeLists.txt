@@ -1,16 +1,15 @@
 find_package(Assimp REQUIRED)
 
-file(GLOB_RECURSE SOURCE_FILES
-	RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-	"${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-)
+include(Macros)
+find_all_sources(_SOURCES)
 
-add_library(cruz3d-common ${SOURCE_FILES})
+add_library(cruz3d-common ${_SOURCES})
 
 target_include_directories(cruz3d-common PUBLIC 
 	.. 
 	"${CRUZ_THIRDPARTY_DIR}/glm"
-	"${CRUZ_THIRDPARTY_DIR}/sokol")
+	"${CRUZ_THIRDPARTY_DIR}/sokol"
+	"${ASSIMP_INCLUDE_DIRS}")
 
 target_link_libraries(cruz3d-common PUBLIC
-	Assimp::Static)
+	"${ASSIMP_LIBRARIES}")
