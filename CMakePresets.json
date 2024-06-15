@@ -8,9 +8,8 @@
             "generator": "Visual Studio 17 2022",
             "toolset": "host=x64",
             "architecture": "x64",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe",
                 "CMAKE_TOOLCHAIN_FILE": "D:/bin/vcpkg/scripts/buildsystems/vcpkg.cmake"
@@ -22,7 +21,7 @@
             "name": "msvc x64 debug",
             "displayName": "msvc x64 debug",
             "configurePreset": "msvc x64 debug",
-            "configuration": "Release"
+            "configuration": "Debug"
         }
     ]
 }

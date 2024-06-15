@@ -1,3 +1,5 @@
+#pragma once
+
 #define CRUZ3D_IMPL
 #include <Cruz3D/Cruz3D.h>
 #undef CRUZ3D_IMPL
@@ -16,8 +18,13 @@
 
 static void sokol_init()
 {
+    sg_setup({
+        .logger = {.func = slog_func},
+        .environment = sglue_environment(),
+    });
+    
     Assimp::Importer importer;
-    importer.ReadFile("data/monkey.obj", aiProcess_Triangulate);
+    const aiScene* scene = importer.ReadFile("data/monkey.obj", aiProcess_Triangulate);
 }
 
 static void sokol_frame()

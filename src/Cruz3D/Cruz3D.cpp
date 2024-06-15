@@ -1,1 +1,4 @@
-int main() {}
+class a
+{
+    int b;
+};

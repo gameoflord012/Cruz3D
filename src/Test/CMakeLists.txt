@@ -1,7 +1,12 @@
 include(Macros)
 find_all_sources(_SOURCES)
 
-add_executable(cruz3d-test "${_SOURCES}")
+add_executable(cruz3d-test)
 target_compile_options(cruz3d-test PRIVATE "${CRUZ_CXX_FLAGS}")
+
+# prepare sources and dependencies
+target_sources(cruz3d-test PRIVATE "${_SOURCES}")
 target_include_directories(cruz3d-test PRIVATE "..")
 target_link_libraries(cruz3d-test cruz3d-static)
+
+copy_target_dlls(cruz3d-test)

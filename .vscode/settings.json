@@ -3,6 +3,7 @@
         ".fantomasignore": "ignore",
         "xiosbase": "cpp",
         "filesystem": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "cassert": "cpp"
     }
 }

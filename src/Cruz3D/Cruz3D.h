@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef CRUZ3D_IMPL
 #define SOKOL_IMPL
 #define SOKOL_GLCORE
