@@ -1,3 +1,5 @@
+#include "ShaderDesc.h"
+
 #define CRUZ3D_IMPL
 #include <Cruz3D/Cruz3D.h>
 #undef CRUZ3D_IMPL
@@ -6,10 +8,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <assimp/scene.h>
 
-struct params_t
-{
-    glm::mat4x4 mvp;
-};
 
 // clang-format off
 static float s_vertices[] = {
@@ -53,46 +51,6 @@ static uint16_t s_indices[] = {
     22, 21, 20,  23, 22, 20
 };
 
-sg_shader_desc s_shd_desc = {
-    .vs = {
-        .source =
-            "#version 330\n"
-            "uniform mat4 mvp;\n"
-            "layout(location=0) in vec4 position;\n"
-            "layout(location=1) in vec4 color0;\n"
-            "out vec4 color;\n"
-            "void main() {\n"
-            "  gl_Position = mvp * position;\n"
-            "  color = color0;\n"
-            "}\n",
-
-        .uniform_blocks = {
-            {
-                .size = sizeof(params_t),
-                .uniforms = 
-                {
-                    {
-                        .name="mvp", 
-                        .type=SG_UNIFORMTYPE_MAT4
-                    } 
-                }
-            }
-        }
-    },
-    /* NOTE: since the shader defines explicit attribute locations,
-        we don't need to provide an attribute name lookup table in the shader
-    */
-    .fs = {
-        .source =
-            "#version 330\n"
-            "in vec4 color;\n"
-            "out vec4 frag_color;\n"
-            "void main() {\n"
-            "  frag_color = color;\n"
-            "}\n"
-    }
-};
-
 static sg_shader s_shd;
 static sg_pipeline s_pip;
 static sg_buffer s_vbuf;
@@ -119,14 +77,14 @@ static void sokol_init()
     s_ibuf = sg_make_buffer({.type = SG_BUFFERTYPE_INDEXBUFFER, .data = SG_RANGE(s_indices)});
     s_bind = {.vertex_buffers = {s_vbuf}, .index_buffer = s_ibuf};
 
-    s_shd = sg_make_shader(s_shd_desc);
+    s_shd = sg_make_shader(Cruz::ShaderDecs::BasicMVP);
     s_pip = sg_make_pipeline({
         .shader = s_shd,
         .layout = {.buffers = {{.stride = 28}},
                    .attrs = {{.format = SG_VERTEXFORMAT_FLOAT3}, {.format = SG_VERTEXFORMAT_FLOAT4}}},
         .depth =
             {
-                .compare = SG_COMPAREFUNC_GREATER_EQUAL,
+                .compare = SG_COMPAREFUNC_LESS_EQUAL,
                 .write_enabled = false,
             },
         .index_type = SG_INDEXTYPE_UINT16,
@@ -152,7 +110,7 @@ static void sokol_frame()
     model = glm::rotate(model, s_ry, {0.0f, 1.0f, 0.0f});
 
     // model-view-projection matrix for vertex shader
-    params_t vs_params = {.mvp = view_proj * model};
+    Cruz::ShaderDecs::BasicMVP_params_t vs_params = {.mvp = view_proj * model};
 
     sg_begin_pass({.action = s_pass_action, .swapchain = sglue_swapchain()});
     sg_apply_pipeline(s_pip);

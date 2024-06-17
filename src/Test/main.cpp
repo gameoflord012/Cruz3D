@@ -1,4 +1,5 @@
 #include "assimp_test.h"
+
 #include <cassert>
 
 int main()
