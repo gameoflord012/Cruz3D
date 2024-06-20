@@ -1,18 +1,18 @@
 #pragma once
 
-#include <sokol_gfx.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <sokol_gfx.h>
 
-namespace Cruz
+namespace cruz
 {
-namespace ShaderDecs
+namespace ShaderDesc
 {
-struct BasicMVP_params_t
+struct BasicMVP_uniform
 {
     glm::mat4x4 mvp;
 };
 
-const sg_shader_desc BasicMVP = {
+static const sg_shader_desc BasicMVP{
     .vs = {.source = "#version 330\n"
                      "uniform mat4 mvp;\n"
                      "layout(location=0) in vec4 position;\n"
@@ -23,7 +23,8 @@ const sg_shader_desc BasicMVP = {
                      "  color = color0;\n"
                      "}\n",
 
-           .uniform_blocks = {{.size = sizeof(BasicMVP_params_t), .uniforms = {{.name = "mvp", .type = SG_UNIFORMTYPE_MAT4}}}}},
+           .uniform_blocks = {{.size = sizeof(BasicMVP_uniform),
+                               .uniforms = {{.name = "mvp", .type = SG_UNIFORMTYPE_MAT4}}}}},
     /* NOTE: since the shader defines explicit attribute locations,
         we don't need to provide an attribute name lookup table in the shader
     */
@@ -33,5 +34,5 @@ const sg_shader_desc BasicMVP = {
                      "void main() {\n"
                      "  frag_color = color;\n"
                      "}\n"}};
-} // namespace ShaderDecs
-} // namespace Cruz
+} // namespace ShaderDesc
+} // namespace cruz

@@ -110,7 +110,7 @@ static void sokol_frame()
     model = glm::rotate(model, s_ry, {0.0f, 1.0f, 0.0f});
 
     // model-view-projection matrix for vertex shader
-    Cruz::ShaderDecs::BasicMVP_params_t vs_params = {.mvp = view_proj * model};
+    Cruz::ShaderDecs::BasicMVP_uniform vs_params = {.mvp = view_proj * model};
 
     sg_begin_pass({.action = s_pass_action, .swapchain = sglue_swapchain()});
     sg_apply_pipeline(s_pip);

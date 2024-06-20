@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ShaderDesc.h"
-
 #define CRUZ3D_IMPL
 #include <Cruz3D/Cruz3D.h>
 #undef CRUZ3D_IMPL
@@ -13,14 +11,15 @@
 #include <assimp/scene.h>
 #include <cstdio>
 
-const uint16_t s_buffer_size = 16384;
+#include <Cruz3D/Graphic.h>
+
 const unsigned int AI_PROCESS_FLAGS = aiProcess_Triangulate | aiProcess_JoinIdenticalVertices;
-static float s_vertices[s_buffer_size];
-static unsigned int s_indices[s_buffer_size];
-static unsigned int s_num_indices;
+
+static cruz::VertexBuffer s_vertices;
+static cruz::IndexBuffer s_indices;
 
 static sg_shader s_shd;
-static sg_pipeline s_pip;
+static cruz::Pipeline *s_pip;
 static sg_buffer s_vbuf;
 static sg_buffer s_ibuf;
 static sg_bindings s_bind;
@@ -50,62 +49,27 @@ static void sokol_init()
         assert(false);
     }
 
-    unsigned int numVerticies = 0;
-    unsigned int numFaces = 0;
     for (unsigned int i = 0; i < s_scene->mNumMeshes; i++)
     {
         for (unsigned int j = 0; j < s_scene->mMeshes[i]->mNumVertices; j++)
         {
             const aiVector3D &vertex = s_scene->mMeshes[i]->mVertices[j];
-
-            // clang-format off
-            s_vertices[numVerticies * 7    ] = vertex.x;
-            s_vertices[numVerticies * 7 + 1] = vertex.y;
-            s_vertices[numVerticies * 7 + 2] = vertex.z;
-
-            s_vertices[numVerticies * 7 + 3] = 1;
-            s_vertices[numVerticies * 7 + 4] = 0;
-            s_vertices[numVerticies * 7 + 5] = 0;
-            s_vertices[numVerticies * 7 + 6] = 1;
-            // clang-format on
-
-            numVerticies++;
+            s_vertices.Push(vertex);
+            s_vertices.Push({1, 0, 0, 1});
         }
 
         for (size_t j = 0; j < s_scene->mMeshes[i]->mNumFaces; j++)
         {
             const aiFace &face = s_scene->mMeshes[i]->mFaces[j];
-            assert(face.mNumIndices == 3);
-
-            // clang-format off
-            s_indices[numFaces * 3    ] = face.mIndices[0];
-            s_indices[numFaces * 3 + 1] = face.mIndices[1];
-            s_indices[numFaces * 3 + 2] = face.mIndices[2];
-            // clang-format on
-
-            numFaces++;
+            s_indices.Push(face);
         }
-
-        s_num_indices = numFaces * 3;
     }
 
-    s_vbuf = sg_make_buffer({.data = SG_RANGE(s_vertices) });
-    s_ibuf = sg_make_buffer({.type = SG_BUFFERTYPE_INDEXBUFFER, .data = SG_RANGE(s_indices) });
+    s_vbuf = cruz::make_vertex_buffer(s_vertices);
+    s_ibuf = cruz::make_index_buffer(s_indices);
     s_bind = {.vertex_buffers = {s_vbuf}, .index_buffer = s_ibuf};
 
-    s_shd = sg_make_shader(Cruz::ShaderDecs::BasicMVP);
-    s_pip = sg_make_pipeline({
-        .shader = s_shd,
-        .layout = {.buffers = {{.stride = 28}},
-                   .attrs = {{.format = SG_VERTEXFORMAT_FLOAT3}, {.format = SG_VERTEXFORMAT_FLOAT4}}},
-        .depth =
-            {
-                .compare = SG_COMPAREFUNC_LESS_EQUAL,
-                .write_enabled = false,
-            },
-        .index_type = SG_INDEXTYPE_UINT32,
-        .cull_mode = SG_CULLMODE_BACK,
-    });
+    s_pip = new cruz::Pipeline(cruz::make_shader("BasicMVP"));
 }
 
 static float s_rx;
@@ -127,14 +91,14 @@ static void sokol_frame()
     model = glm::rotate(model, s_ry, {0.0f, 1.0f, 0.0f});
 
     // model-view-projection matrix for vertex shader
-    Cruz::ShaderDecs::BasicMVP_params_t vs_params = {.mvp = view_proj * model};
+    cruz::ShaderDesc::BasicMVP_uniform vs_params = {.mvp = view_proj * model};
 
     sg_begin_pass({.action = s_pass_action, .swapchain = sglue_swapchain()});
-    sg_apply_pipeline(s_pip);
+    sg_apply_pipeline(s_pip->sg_pip());
     sg_apply_bindings(s_bind);
     sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(vs_params));
-    sg_draw(0, s_num_indices, 1);
-    sg_end_pass();
+    sg_draw(0, (int)s_indices.count(), 1);
+    sg_end_pass();  
     sg_commit();
 }
 
