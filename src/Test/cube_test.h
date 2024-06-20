@@ -1,8 +1,8 @@
 #include "ShaderDesc.h"
 
-#define CRUZ3D_IMPL
+#define CRUZ_IMPL
 #include <Cruz3D/Cruz3D.h>
-#undef CRUZ3D_IMPL
+#undef CRUZ_IMPL
 
 #include <cstdio>
 #include <glm/gtc/matrix_transform.hpp>

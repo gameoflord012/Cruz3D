@@ -1,17 +1,19 @@
 #pragma once
 
-#define CRUZ3D_IMPL
+#define CRUZ_IMPL
 #include <Cruz3D/Cruz3D.h>
-#undef CRUZ3D_IMPL
+#undef CRUZ_IMPL
 
+#include <Cruz3D/Graphic.h>
+
+#include <cstdio>
 #include <debugapi.h>
+
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-#include <cstdio>
-
-#include <Cruz3D/Graphic.h>
 
 const unsigned int AI_PROCESS_FLAGS = aiProcess_Triangulate | aiProcess_JoinIdenticalVertices;
 
@@ -98,7 +100,7 @@ static void sokol_frame()
     sg_apply_bindings(s_bind);
     sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(vs_params));
     sg_draw(0, (int)s_indices.count(), 1);
-    sg_end_pass();  
+    sg_end_pass();
     sg_commit();
 }
 
