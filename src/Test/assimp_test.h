@@ -43,7 +43,7 @@ static void sokol_init()
 		});
 
 	Assimp::Importer importer;
-	s_scene = importer.ReadFile(CRUZ_DATA_DIR "/monkey.obj", AI_PROCESS_FLAGS);
+	s_scene = importer.ReadFile(CRUZ_DATA_DIR "/metal_trash_can_4k.obj", AI_PROCESS_FLAGS);
 
 	if (!s_scene)
 	{
