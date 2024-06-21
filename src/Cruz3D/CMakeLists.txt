@@ -3,10 +3,9 @@ find_package(Assimp REQUIRED)
 include(Macros)
 find_all_sources(_SOURCES)
 
-add_library(cruz3d-static)
-target_compile_options(cruz3d-static PRIVATE "${CRUZ_CXX_FLAGS}")
-
-target_sources(cruz3d-static PRIVATE ${_SOURCES})
+add_library(cruz3d-static ${_SOURCES})
+target_compile_definitions(cruz3d-static 
+	PUBLIC "CRUZ_DATA_DIR=\"${CRUZ_DATA_DIR}\"")
 
 target_include_directories(cruz3d-static PUBLIC 
 	.. 

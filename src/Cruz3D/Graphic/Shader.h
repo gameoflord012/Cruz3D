@@ -1,6 +1,8 @@
 #ifndef CRUZ_SHADER_H
 #define CRUZ_SHADER_H
+
 #include <sokol_gfx.h>
+
 namespace cruz
 {
 sg_shader make_shader(const char *shaderName);

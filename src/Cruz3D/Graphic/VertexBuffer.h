@@ -2,8 +2,10 @@
 
 #include <assimp/color4.h>
 #include <assimp/vector3.h>
-#include <initializer_list>
+
 #include <sokol_gfx.h>
+
+#include <initializer_list>
 #include <vector>
 
 namespace cruz
