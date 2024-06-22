@@ -1,27 +1,28 @@
 {
-    "version": 8,
-    "configurePresets": [
-        {
-            "name": "msvc x64 debug",
-            "displayName": "msvc x64 debug",
-            "description": "msvc x64 debug",
-            "generator": "Visual Studio 17 2022",
-            "toolset": "host=x64",
-            "architecture": "x64",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe",
-                "CMAKE_TOOLCHAIN_FILE": "D:/bin/vcpkg/scripts/buildsystems/vcpkg.cmake"
-            }
-        }
-    ],
-    "buildPresets": [
-        {
-            "name": "msvc x64 debug",
-            "displayName": "msvc x64 debug",
-            "configurePreset": "msvc x64 debug",
-            "configuration": "Debug"
-        }
-    ]
+  "version": 8,
+  "configurePresets": [
+    {
+      "name": "msvc x64 debug",
+      "displayName": "msvc x64 debug",
+      "description": "msvc x64 debug",
+      "generator": "Visual Studio 17 2022",
+      "toolset": "host=x64",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "CMAKE_TOOLCHAIN_FILE": "D:/bin/vcpkg/scripts/buildsystems/vcpkg.cmake"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "msvc x64 debug",
+      "displayName": "msvc x64 debug",
+      "configurePreset": "msvc x64 debug",
+      "configuration": "Debug"
+    }
+  ]
 }

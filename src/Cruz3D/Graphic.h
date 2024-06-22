@@ -6,3 +6,4 @@
 #include "Graphic/Shader.h"
 #include "Graphic/ShaderDesc.h"
 #include "Graphic/SokolHelpers.inl"
+#include "Graphic/Mesh.h"
