@@ -16,10 +16,10 @@ namespace cruz
 						.format = SG_VERTEXFORMAT_FLOAT3 // vertex position
 					},
 					{
-						.format = SG_VERTEXFORMAT_FLOAT3 // texture coordinate
+						.format = SG_VERTEXFORMAT_FLOAT4 // vertex color
 					},
 					{
-						.format = SG_VERTEXFORMAT_FLOAT4 // vertex color
+						.format = SG_VERTEXFORMAT_FLOAT3 // texture coordinate
 					}
 				}
 			},

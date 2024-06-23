@@ -11,7 +11,7 @@
                 "UNICODE",
                 "_UNICODE",
                 "CRUZ_IMPL",
-                "SHADERDESC_IMPL",
+                "SHADERDESC_IMPL"
             ],
             "windowsSdkVersion": "10.0.22621.0",
             "compilerPath": "cl.exe",
