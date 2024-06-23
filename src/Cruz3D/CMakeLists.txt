@@ -11,6 +11,7 @@ target_include_directories(cruz3d-static PUBLIC
 	.. 
 	"${CRUZ_THIRDPARTY_DIR}/glm"
 	"${CRUZ_THIRDPARTY_DIR}/sokol"
+	"${CRUZ_THIRDPARTY_DIR}/stb"
 	"${ASSIMP_INCLUDE_DIRS}")
 	
 target_link_libraries(cruz3d-static PUBLIC
