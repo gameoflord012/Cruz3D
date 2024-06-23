@@ -27,4 +27,9 @@ namespace cruz
 	{
 		return m_ibuf;
 	}
-}
+    
+	unsigned int Mesh::NumberOfIndicies() const
+    {
+        return m_ibuf.count();
+    }
+    } // namespace cruz

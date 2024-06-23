@@ -16,8 +16,8 @@ sg_range IndexBuffer::GetRange() const
     sg_range rg = { .ptr = m_data.data(), .size = m_data.size() * sizeof(index_t)};
     return rg;
 }
-size_t IndexBuffer::count() const
+unsigned int IndexBuffer::count() const
 {
-    return m_data.size();
+    return (unsigned int)m_data.size();
 }
 } // namespace cruz

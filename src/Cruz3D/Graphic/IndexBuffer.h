@@ -13,7 +13,7 @@ class IndexBuffer
   public:
     void Push(const aiFace &face);
     sg_range GetRange() const;
-    size_t count() const;
+    unsigned int count() const;
 
   private:
     typedef unsigned int index_t;

@@ -17,9 +17,6 @@
 
 constexpr unsigned int AI_PROCESS_FLAGS = aiProcess_Triangulate | aiProcess_JoinIdenticalVertices;
 
-static cruz::VertexBuffer s_vertices;
-static cruz::IndexBuffer s_indices;
-
 static sg_shader s_shd;
 static cruz::Mesh s_mesh;
 static cruz::Pipeline* s_pip;
@@ -57,21 +54,21 @@ static void sokol_init()
 
 	const sg_buffer vbuf = cruz::make_vertex_buffer(s_mesh.GetVBuf());
 	const sg_buffer ibuf = cruz::make_index_buffer(s_mesh.GetIBuf());
-	s_bind = { .vertex_buffers = {vbuf}, .index_buffer = ibuf };
 
-	s_pip = new cruz::Pipeline(cruz::make_shader("BasicMVP"));
+	s_bind = { .vertex_buffers = {vbuf}, .index_buffer = ibuf };
+	s_pip =  new cruz::Pipeline(cruz::make_shader("BasicMVP"));
 }
 
 static float s_rx;
-static float s_ry;
+static float s_ry; 
 
 static void sokol_frame()
-{
+{ 
 	const glm::mat4x4 proj = glm::perspective(1.0f, sapp_widthf() / sapp_heightf(), 0.01f, 10.0f);
 	const glm::mat4x4 view = glm::lookAt(glm::vec3{ 0.0f, 0.0f, 2.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
 	const glm::mat4x4 view_proj = proj * view;
 
-	// rotated model matrix
+	// rotated model matrix 
 	s_rx += 1.0f / 60;
 	s_ry += 2.0f / 60;
 
@@ -87,7 +84,7 @@ static void sokol_frame()
 	sg_apply_pipeline(s_pip->sg_pip());
 	sg_apply_bindings(s_bind);
 	sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(vs_params));
-	sg_draw(0, (int)s_indices.count(), 1);
+	sg_draw(0, s_mesh.NumberOfIndicies(), 1);
 	sg_end_pass();
 	sg_commit();
 }
