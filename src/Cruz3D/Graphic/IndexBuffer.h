@@ -1,7 +1,7 @@
 #pragma once
 
 #include <assimp/mesh.h>
-#include <sokol_gfx.h>
+#include <sokol/sokol_gfx.h>
 #include <vector>
 #include <utility>
 

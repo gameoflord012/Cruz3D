@@ -2,7 +2,7 @@
 #define SHADERDESCS_H
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <sokol_gfx.h>
+#include <sokol/sokol_gfx.h>
 #include <string>
 
 namespace cruz

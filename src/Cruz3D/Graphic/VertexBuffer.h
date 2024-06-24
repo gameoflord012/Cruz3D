@@ -3,7 +3,7 @@
 #include <assimp/color4.h>
 #include <assimp/vector3.h>
 
-#include <sokol_gfx.h>
+#include <sokol/sokol_gfx.h>
 
 #include <initializer_list>
 #include <vector>

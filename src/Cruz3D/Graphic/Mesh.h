@@ -8,6 +8,9 @@ namespace cruz
 	class Mesh
 	{
 	public:
+		Mesh() = default;
+		Mesh(const aiMesh&);
+
 		void AddMesh(const aiMesh&);
 		const VertexBuffer& GetVBuf() const;
 		const IndexBuffer& GetIBuf() const;

@@ -9,9 +9,7 @@ target_compile_definitions(cruz3d-static
 
 target_include_directories(cruz3d-static PUBLIC 
 	.. 
-	"${CRUZ_THIRDPARTY_DIR}/glm"
-	"${CRUZ_THIRDPARTY_DIR}/sokol"
-	"${CRUZ_THIRDPARTY_DIR}/stb"
+	"${CRUZ_THIRDPARTY_DIR}"
 	"${ASSIMP_INCLUDE_DIRS}")
 	
 target_link_libraries(cruz3d-static PUBLIC

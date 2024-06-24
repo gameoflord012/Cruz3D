@@ -3,7 +3,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-#include <sokol_gfx.h>
+#include <sokol/sokol_gfx.h>
 
 namespace cruz
 {

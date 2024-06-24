@@ -1,7 +1,7 @@
 #ifndef CRUZ_SHADER_H
 #define CRUZ_SHADER_H
 
-#include <sokol_gfx.h>
+#include <sokol/sokol_gfx.h>
 
 namespace cruz
 {
