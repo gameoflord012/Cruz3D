@@ -65,7 +65,11 @@ static std::unordered_map<std::string, sg_shader_desc> Descs{
                     "out vec4 frag_color;\n"
                     "void main() {\n"
                     "  frag_color = color;\n"
-                    "}\n"
+                    "}\n",
+
+                .images = { { .used = true } },
+                .samplers = { { .used = true } },
+                .image_sampler_pairs = { { .used = true, .image_slot = 0, .sampler_slot = 0, .glsl_name = "tex" } },
             }
         }
     },

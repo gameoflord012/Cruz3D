@@ -41,11 +41,31 @@ static void sokol_init()
 
     s_scene = new cruz::Scene(CRUZ_DATA_DIR "/metal_trash_can_4k.obj");
     s_meshes = s_scene->GetMeshes();
+    s_mats = s_scene->GetMaterials();
 
-    const sg_buffer vbuf = cruz::make_vertex_buffer(s_meshes[0]->GetVBuf());
-    const sg_buffer ibuf = cruz::make_index_buffer(s_meshes[0]->GetIBuf());
+    sg_image img = s_mats[1]->GetDiffuse();
 
-    s_bind = {.vertex_buffers = {vbuf}, .index_buffer = ibuf};
+    // create a sampler object
+    sg_sampler smp = sg_make_sampler({
+        .min_filter = SG_FILTER_NEAREST,
+        .mag_filter = SG_FILTER_NEAREST,
+    });
+
+    const sg_buffer vbuf = cruz::make_vertex_buffer(s_meshes[2]->GetVBuf());
+    const sg_buffer ibuf = cruz::make_index_buffer(s_meshes[2]->GetIBuf());
+
+    // clang-format off
+    s_bind = {
+        .vertex_buffers = { vbuf },
+        .index_buffer = ibuf,
+        .fs = 
+        {
+            .images = { img },
+            .samplers = { smp },
+        }
+    };
+    // clang-format on
+
     s_pip = new cruz::Pipeline(cruz::make_shader("BasicMVP"));
 }
 
@@ -74,7 +94,7 @@ static void sokol_frame()
     sg_apply_pipeline(s_pip->sg_pip());
     sg_apply_bindings(s_bind);
     sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(vs_params));
-    sg_draw(0, s_meshes[0]->NumberOfIndicies(), 1);
+    sg_draw(0, s_meshes[2]->NumberOfIndicies(), 1);
     sg_end_pass();
     sg_commit();
 }
