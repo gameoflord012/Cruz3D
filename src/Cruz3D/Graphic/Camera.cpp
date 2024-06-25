@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include <glm/gtx/transform.inl>
+
 #include <cassert>
 
 cruz::Camera::Camera(float ratio)
@@ -26,12 +28,37 @@ void cruz::Camera::Move(glm::vec3 v)
 void cruz::Camera::MoveRel(glm::vec3 v)
 {
 #if _DEBUG
-    assert(glm::length(m_lookDir) - 1.0f < glm::epsilon<float>());
+    assert(fabs(glm::length(m_lookDir) - 1.0f) < 0.005);
 #endif
 
     m_position += m_lookDir * v.z;
     m_position += UP * v.y;
     m_position += glm::cross(m_lookDir, UP) * v.x;
+
+    ApplyChanges();
+}
+
+void cruz::Camera::Rotate(glm::vec3 rot)
+{
+    // clang-format off
+    glm::mat4x4 rotation
+    {
+        1, 0, 0, 0, 
+        0, 1, 0, 0, 
+        0, 0, 1, 0, 
+        0, 0, 0, 1
+    };
+    // clang-format on
+
+    rotation = glm::rotate(rotation, rot.x, {1.0f, 0.0f, 0.0f});
+    rotation = glm::rotate(rotation, rot.y, {0.0f, 1.0f, 0.0f});
+    rotation = glm::rotate(rotation, rot.z, {0.0f, 1.0f, 1.0f});
+
+    glm::vec4 homo = {m_lookDir.x, m_lookDir.y, m_lookDir.z, 1.0f};
+    homo = rotation * homo;
+
+    m_lookDir = {homo.x / homo.w, homo.y / homo.w, homo.z / homo.w};
+    m_lookDir = glm::normalize(m_lookDir);
 
     ApplyChanges();
 }

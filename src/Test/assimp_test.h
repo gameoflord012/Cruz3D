@@ -26,7 +26,6 @@ static cruz::Pipeline *s_pip;
 
 static cruz::Camera *s_cam;
 
-
 // ███████╗██╗░░░██╗███╗░░██╗░█████╗░████████╗██╗░█████╗░███╗░░██╗░██████╗
 // ██╔════╝██║░░░██║████╗░██║██╔══██╗╚══██╔══╝██║██╔══██╗████╗░██║██╔════╝
 // █████╗░░██║░░░██║██╔██╗██║██║░░╚═╝░░░██║░░░██║██║░░██║██╔██╗██║╚█████╗░
@@ -45,12 +44,22 @@ static void InitData()
 static void UpdateCameraMovement()
 {
     int mZ{}, mX{};
-    if(cruz::singleton::Input.IsKeyPressed(SAPP_KEYCODE_W)) mZ++;
-    if(cruz::singleton::Input.IsKeyPressed(SAPP_KEYCODE_S)) mZ--;
-    if(cruz::singleton::Input.IsKeyPressed(SAPP_KEYCODE_D)) mX++;
-    if(cruz::singleton::Input.IsKeyPressed(SAPP_KEYCODE_A)) mX--;
+    if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_W))
+        mZ++;
+    if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_S))
+        mZ--;
+    if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_D))
+        mX++;
+    if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_A))
+        mX--;
 
-    s_cam->MoveRel(glm::vec3(mX, 0.0f, mZ) * (float)sapp_frame_duration());
+    float delta = (float)sapp_frame_duration();
+    s_cam->MoveRel(glm::vec3(mX, 0.0f, mZ) * delta);
+
+    if (INPUT_INS.IsMouseMoving() && INPUT_INS.IsMouseDown(SAPP_MOUSEBUTTON_MIDDLE))
+    {
+        s_cam->Rotate({INPUT_INS.GetMouseDelta().y * delta, INPUT_INS.GetMouseDelta().x * delta, 0.0f});
+    }
 }
 
 static void sokol_init()
@@ -88,7 +97,7 @@ static void sokol_init()
     s_pip = new cruz::Pipeline(cruz::make_shader("BasicMVP"));
 }
 
-static void sokol_event(const sapp_event* event)
+static void sokol_event(const sapp_event *event)
 {
     cruz::singleton::Input.ProcessEvent(event);
 }
