@@ -5,16 +5,17 @@ namespace cruz
 {
 Mesh::Mesh(const aiMesh &mesh)
 {
-	AddMesh(mesh);
+    AddMesh(mesh);
 }
 
 void Mesh::AddMesh(const aiMesh &mesh)
 {
+
     for (unsigned int i = 0; i < mesh.mNumVertices; i++)
     {
         m_vbuf.Push(mesh.mVertices[i]);
-        m_vbuf.Push(mesh.HasVertexColors(0) ? mesh.mColors[0][i] : aiColor4D(0, 1, 0, 1));
-        m_vbuf.Push(mesh.HasTextureCoords(0) ? mesh.mTextureCoords[0][i] : aiVector3D(0, 0, 0));
+        m_vbuf.Push(mesh.HasVertexColors(0) ? mesh.mColors[0][i] : aiColor4D(1, 1, 1, 1));
+        m_vbuf.Push(mesh.HasTextureCoords(0) ? aiVector2D(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y) : aiVector2D(0, 0));
     }
 
     for (size_t i = 0; i < mesh.mNumFaces; i++)

@@ -37,16 +37,23 @@ static std::unordered_map<std::string, sg_shader_desc> Descs{
         {
             .vs
             {
-                .source = 
-                    "#version 330\n"
-                    "uniform mat4 mvp;\n"
-                    "layout(location=0) in vec4 position;\n"
-                    "layout(location=1) in vec4 color0;\n"
-                    "out vec4 color;\n"
-                    "void main() {\n"
-                    "  gl_Position = mvp * position;\n"
-                    "  color = color0;\n"
-                    "}\n",
+                .source = R"(
+#version 330
+
+uniform mat4 mvp;
+layout(location=0) in vec4 position;
+layout(location=1) in vec4 color0;
+layout(location=2) in vec2 texcoord0;
+
+out vec4 color;
+out vec2 uv;
+
+void main() {
+    gl_Position =  mvp * position;
+    color = color0;
+    uv = texcoord0;
+}
+)",
 
                 .uniform_blocks 
                 {
@@ -59,14 +66,20 @@ static std::unordered_map<std::string, sg_shader_desc> Descs{
 
             .fs 
             {
-                .source =   
-                    "#version 330\n"
-                    "in vec4 color;\n"
-                    "out vec4 frag_color;\n"
-                    "void main() {\n"
-                    "  frag_color = color;\n"
-                    "}\n",
+                .source = R"(
+#version 330
 
+uniform sampler2D tex;
+
+in vec4 color;
+in vec2 uv;
+
+out vec4 frag_color;
+
+void main() {
+    frag_color = texture(tex, uv) * color;
+}
+)",
                 .images = { { .used = true } },
                 .samplers = { { .used = true } },
                 .image_sampler_pairs = { { .used = true, .image_slot = 0, .sampler_slot = 0, .glsl_name = "tex" } },

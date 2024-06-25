@@ -11,6 +11,12 @@ void VertexBuffer::Push(const aiVector3D &v3)
     m_data.push_back(v3.z);
 }
 
+void VertexBuffer::Push(const aiVector2D &v2)
+{
+    m_data.push_back(v2.x);
+    m_data.push_back(v2.y);
+}
+
 void VertexBuffer::Push(const aiColor4D &col)
 {
     m_data.push_back(col.r);

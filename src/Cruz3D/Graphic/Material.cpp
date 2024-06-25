@@ -12,22 +12,26 @@ cruz::Material::Material(const aiMaterial &mat, std::string dir)
         aiString texPath;
         assert(mat.GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == aiReturn_SUCCESS);
 
-        Load_sg_image(m_diffuse, dir + '/' + texPath.C_Str());
+        m_diffuse = LoadSGImage(dir + '/' + texPath.C_Str());
     }
 }
 
 cruz::Material::~Material()
 {
-    sg_dealloc_image(m_diffuse);
+    for(auto img : m_loadedImgs)
+    {
+        stbi_image_free(img);
+    }
 }
 
-sg_image cruz::Material::GetDiffuse() const
+sg_image_desc cruz::Material::GetDiffuse() const
 {
     return m_diffuse;
 }
 
-void cruz::Material::Load_sg_image(sg_image &img, std::string path)
+sg_image_desc cruz::Material::LoadSGImage(std::string path)
 {
+    // load image with stb
     int width, height, channel;
     stbi_uc *tex = stbi_load(path.c_str(), &width, &height, &channel, MATERIAL_TEX_CHANNEL);
     if (tex == NULL)
@@ -36,13 +40,16 @@ void cruz::Material::Load_sg_image(sg_image &img, std::string path)
         assert(false);
     }
 
+    // for releasing resource later
+    m_loadedImgs.push_back(tex);
+
+    // init image_desc
     sg_image_desc imgDesc = {
         .width = width,
         .height = height,
         .pixel_format = SG_PIXELFORMAT_RGBA8,
     };
-    imgDesc.data.subimage[0][0] = {.ptr = tex, .size = sizeof(stbi_uc) * width * height * 4};
-    img = sg_make_image(imgDesc);
 
-    stbi_image_free(tex);
+    imgDesc.data.subimage[0][0] = {.ptr = tex, .size = sizeof(stbi_uc) * width * height * 4};
+    return imgDesc;
 }

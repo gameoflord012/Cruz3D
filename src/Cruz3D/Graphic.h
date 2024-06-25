@@ -9,3 +9,4 @@
 #include "Graphic/Mesh.h"
 #include "Graphic/Material.h"
 #include "Graphic/Scene.h"
+#include "Graphic/Camera.h"
