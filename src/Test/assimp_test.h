@@ -6,6 +6,7 @@
 
 #include <Cruz3D/Debug.h>
 #include <Cruz3D/Graphic.h>
+#include <Cruz3D/Input.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -25,7 +26,6 @@ static cruz::Pipeline *s_pip;
 
 static cruz::Camera *s_cam;
 
-bool KeyStates[SAPP_KEYCODE_MENU + 1];
 
 // ███████╗██╗░░░██╗███╗░░██╗░█████╗░████████╗██╗░█████╗░███╗░░██╗░██████╗
 // ██╔════╝██║░░░██║████╗░██║██╔══██╗╚══██╔══╝██║██╔══██╗████╗░██║██╔════╝
@@ -45,12 +45,12 @@ static void InitData()
 static void UpdateCameraMovement()
 {
     int mZ{}, mX{};
-    if(KeyStates[SAPP_KEYCODE_W]) mZ++;
-    if(KeyStates[SAPP_KEYCODE_S]) mZ--;
-    if(KeyStates[SAPP_KEYCODE_D]) mX++;
-    if(KeyStates[SAPP_KEYCODE_A]) mX--;
+    if(cruz::singleton::Input.IsKeyPressed(SAPP_KEYCODE_W)) mZ++;
+    if(cruz::singleton::Input.IsKeyPressed(SAPP_KEYCODE_S)) mZ--;
+    if(cruz::singleton::Input.IsKeyPressed(SAPP_KEYCODE_D)) mX++;
+    if(cruz::singleton::Input.IsKeyPressed(SAPP_KEYCODE_A)) mX--;
 
-    s_cam->Move(glm::vec3(mX, 0.0f, mZ) * (float)sapp_frame_duration());
+    s_cam->MoveRel(glm::vec3(mX, 0.0f, mZ) * (float)sapp_frame_duration());
 }
 
 static void sokol_init()
@@ -90,15 +90,7 @@ static void sokol_init()
 
 static void sokol_event(const sapp_event* event)
 {
-    if(event->type == SAPP_EVENTTYPE_KEY_DOWN)
-    {
-        KeyStates[event->key_code] = true;
-    }
-
-    if(event->type == SAPP_EVENTTYPE_KEY_UP)
-    {
-        KeyStates[event->key_code] = false;
-    }
+    cruz::singleton::Input.ProcessEvent(event);
 }
 
 static void sokol_frame()
