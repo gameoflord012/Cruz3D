@@ -10,7 +10,12 @@ namespace cruz
 class Input
 {
   public:
+    
+    void Frame();
     void ProcessEvent(const sapp_event *event);
+
+    uint32_t GetModifiers();
+
     bool IsKeyDown(sapp_keycode key) const;
     
     glm::vec2 GetMouseDelta() const;
@@ -21,8 +26,11 @@ class Input
     bool m_mouseMoving{};
     glm::vec2 m_mouseDelta;
 
+
+    uint32_t m_modifiers;
     bool m_keyStates[SAPP_KEYCODE_MENU + 1];
     bool m_mouseStates[SAPP_MOUSEBUTTON_MIDDLE + 1];
+    std::vector<sapp_event> m_eventStack;
 };
 
 namespace singleton

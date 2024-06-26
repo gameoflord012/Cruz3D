@@ -7,6 +7,7 @@
 #include <Cruz3D/Debug.h>
 #include <Cruz3D/Graphic.h>
 #include <Cruz3D/Input.h>
+#include <Cruz3D/Settings.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -43,7 +44,7 @@ static void InitData()
 
 static void UpdateCameraMovement()
 {
-    int mZ{}, mX{};
+    int mX{}, mY{}, mZ{};
     if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_W))
         mZ++;
     if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_S))
@@ -53,12 +54,20 @@ static void UpdateCameraMovement()
     if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_A))
         mX--;
 
+    if(INPUT_INS.IsKeyDown(SAPP_KEYCODE_SPACE))
+    {
+        if((INPUT_INS.GetModifiers() & SAPP_MODIFIER_SHIFT)) mY--;
+        else mY++;
+    }
+
     float delta = (float)sapp_frame_duration();
-    s_cam->MoveRel(glm::vec3(mX, 0.0f, mZ) * delta);
+    s_cam->MoveRel(glm::vec3(mX, mY, mZ) * delta * cruz::settings::CAMERA_MOVESPEED);
 
     if (INPUT_INS.IsMouseMoving() && INPUT_INS.IsMouseDown(SAPP_MOUSEBUTTON_MIDDLE))
     {
-        s_cam->Rotate({INPUT_INS.GetMouseDelta().y * delta, INPUT_INS.GetMouseDelta().x * delta, 0.0f});
+        DEBUG("ROTATING...");
+
+        s_cam->Rotate(glm::vec3(INPUT_INS.GetMouseDelta().y, INPUT_INS.GetMouseDelta().x, 0.0f) * delta * cruz::settings::MOUSE_SENSITIVITY);
     }
 }
 
@@ -99,19 +108,21 @@ static void sokol_init()
 
 static void sokol_event(const sapp_event *event)
 {
-    cruz::singleton::Input.ProcessEvent(event);
+    INPUT_INS.ProcessEvent(event);
 }
 
 static void sokol_frame()
 {
+    INPUT_INS.Frame();
+
     static float s_rx{};
     static float s_ry{};
 
     UpdateCameraMovement();
 
     // rotated model matrix
-    s_rx += 1.0f / 60;
-    s_ry += 2.0f / 60;
+    // s_rx += 1.0f / 60;
+    // s_ry += 2.0f / 60;
 
     glm::mat4x4 model{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 

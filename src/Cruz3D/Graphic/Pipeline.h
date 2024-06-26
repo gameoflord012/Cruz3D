@@ -11,6 +11,7 @@ class Pipeline
     ~Pipeline();
 
     sg_pipeline sg_pip() const;
+
   private:
     sg_pipeline m_pip{};
 };

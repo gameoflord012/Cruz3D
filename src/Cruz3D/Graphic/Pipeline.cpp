@@ -1,6 +1,5 @@
 
 #include "Pipeline.h"
-#include "Settings.h"
 
 namespace cruz
 {
@@ -27,7 +26,7 @@ namespace cruz
 				.compare = SG_COMPAREFUNC_LESS_EQUAL,
 				.write_enabled = true,
 			},
-			.index_type = cruz::INDEXBUFFER_TYPE,
+			.index_type = SG_INDEXTYPE_UINT32,
 			.cull_mode = SG_CULLMODE_BACK,
 		}; // clang-format on
 
