@@ -9,7 +9,7 @@ namespace cruz
 {
 namespace ShaderDesc
 {
-struct BasicMVP_uniform
+struct BasicMVP_VS_Uniform
 {
     glm::mat4x4 mvp;
 };
@@ -58,7 +58,7 @@ void main() {
                 .uniform_blocks 
                 {
                     {
-                        .size = sizeof(BasicMVP_uniform),
+                        .size = sizeof(BasicMVP_VS_Uniform),
                         .uniforms = {{.name = "mvp", .type = SG_UNIFORMTYPE_MAT4}}
                     }
                 }

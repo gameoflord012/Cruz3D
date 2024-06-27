@@ -8,7 +8,7 @@ namespace cruz
 {
 namespace settings
 {
-static constexpr float MOUSE_SENSITIVITY = 0.1f;
+static constexpr float MOUSE_SENSITIVITY = 0.25f;
 static constexpr float CAMERA_MOVESPEED = 2.8f;
 } // namespace settings
 } // namespace cruz

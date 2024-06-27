@@ -38,7 +38,7 @@ namespace cruz
 		sg_dealloc_pipeline(m_pip);
 	}
 
-	sg_pipeline Pipeline::sg_pip() const
+	sg_pipeline Pipeline::GetSGPipeline() const
 	{
 		return m_pip;
 	}

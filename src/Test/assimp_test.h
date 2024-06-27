@@ -6,6 +6,7 @@
 
 #include <Cruz3D/Debug.h>
 #include <Cruz3D/Graphic.h>
+#include <Cruz3D/Graphic/Passes.h>
 #include <Cruz3D/Input.h>
 #include <Cruz3D/Settings.h>
 
@@ -22,8 +23,8 @@ static cruz::unique_ptrs<cruz::Mesh> s_meshes; // array of meshes
 static cruz::unique_ptrs<cruz::Material> s_mats;
 
 static cruz::Scene *s_scene;
-static sg_bindings s_bind;
-static cruz::Pipeline *s_pip;
+static cruz::SimplePass *s_pass;
+static cruz::SimpleBinding *s_binding;
 
 static cruz::Camera *s_cam;
 
@@ -40,6 +41,9 @@ static void InitData()
     s_scene = new cruz::Scene(CRUZ_DATA_DIR "/metal_trash_can_4k.obj");
     s_meshes = s_scene->GetMeshes();
     s_mats = s_scene->GetMaterials();
+
+    s_pass = new cruz::SimplePass();
+    s_binding = new cruz::SimpleBinding(*s_meshes[2], *s_mats[1]);
 }
 
 static void UpdateCameraMovement()
@@ -54,10 +58,12 @@ static void UpdateCameraMovement()
     if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_A))
         mX--;
 
-    if(INPUT_INS.IsKeyDown(SAPP_KEYCODE_SPACE))
+    if (INPUT_INS.IsKeyDown(SAPP_KEYCODE_SPACE))
     {
-        if((INPUT_INS.GetModifiers() & SAPP_MODIFIER_SHIFT)) mY--;
-        else mY++;
+        if ((INPUT_INS.GetModifiers() & SAPP_MODIFIER_SHIFT))
+            mY--;
+        else
+            mY++;
     }
 
     float delta = (float)sapp_frame_duration();
@@ -65,9 +71,8 @@ static void UpdateCameraMovement()
 
     if (INPUT_INS.IsMouseMoving() && INPUT_INS.IsMouseDown(SAPP_MOUSEBUTTON_MIDDLE))
     {
-        DEBUG("ROTATING...");
-
-        s_cam->Rotate(glm::vec3(INPUT_INS.GetMouseDelta().y, INPUT_INS.GetMouseDelta().x, 0.0f) * delta * cruz::settings::MOUSE_SENSITIVITY);
+        s_cam->Rotate(glm::vec3(INPUT_INS.GetMouseDelta().y, INPUT_INS.GetMouseDelta().x, 0.0f) * delta *
+                      cruz::settings::MOUSE_SENSITIVITY);
     }
 }
 
@@ -79,31 +84,6 @@ static void sokol_init()
     });
 
     InitData();
-
-    sg_image img = sg_make_image(s_mats[1]->GetDiffuse());
-
-    // create a sampler object
-    sg_sampler smp = sg_make_sampler({
-        .min_filter = SG_FILTER_LINEAR,
-        .mag_filter = SG_FILTER_LINEAR,
-    });
-
-    const sg_buffer vbuf = cruz::make_vertex_buffer(s_meshes[2]->GetVBuf());
-    const sg_buffer ibuf = cruz::make_index_buffer(s_meshes[2]->GetIBuf());
-
-    // clang-format off
-    s_bind = {
-        .vertex_buffers = { vbuf },
-        .index_buffer = ibuf,
-        .fs = 
-        {
-            .images = { img },
-            .samplers = { smp },
-        }
-    };
-    // clang-format on
-
-    s_pip = new cruz::Pipeline(cruz::make_shader("BasicMVP"));
 }
 
 static void sokol_event(const sapp_event *event)
@@ -129,17 +109,13 @@ static void sokol_frame()
     model = glm::rotate(model, s_rx, {1.0f, 0.0f, 0.0f});
     model = glm::rotate(model, s_ry, {0.0f, 1.0f, 0.0f});
 
-    // model-view-projection matrix for vertex shader
-    const cruz::ShaderDesc::BasicMVP_uniform vs_params = {.mvp = s_cam->GetProjView() * model};
-
-    sg_begin_pass({.swapchain = sglue_swapchain()});
-    sg_apply_pipeline(s_pip->sg_pip());
-    sg_apply_bindings(s_bind);
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(vs_params));
-    sg_draw(0, s_meshes[2]->NumberOfIndicies(), 1);
-    sg_end_pass();
-
-    sg_commit();
+    s_pass->Begin();
+    {
+        s_pass->ApplyBinding(s_binding);
+        s_pass->ApplyVSUniform({.mvp = s_cam->GetProjView() * model});
+        s_pass->Draw();
+    }
+    s_pass->End();
 }
 
 static void sokol_cleanup()

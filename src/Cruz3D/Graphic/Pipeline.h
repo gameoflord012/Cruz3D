@@ -10,7 +10,7 @@ class Pipeline
     Pipeline(sg_shader);
     ~Pipeline();
 
-    sg_pipeline sg_pip() const;
+    sg_pipeline GetSGPipeline() const;
 
   private:
     sg_pipeline m_pip{};
