@@ -33,7 +33,7 @@ void cruz::Camera::MoveRel(glm::vec3 v)
 
     m_position += m_lookDir * v.z;
     m_position += UP * v.y;
-    m_position += glm::cross(m_lookDir, UP) * v.x;
+    m_position += glm::normalize(glm::cross(m_lookDir, UP)) * v.x;
 
     ApplyChanges();
 }
@@ -50,9 +50,9 @@ void cruz::Camera::Rotate(glm::vec3 rot)
     };
     // clang-format on
 
-    rotation = glm::rotate(rotation, rot.x, {1.0f, 0.0f, 0.0f});
-    rotation = glm::rotate(rotation, rot.y, {0.0f, 1.0f, 0.0f});
-    rotation = glm::rotate(rotation, rot.z, {0.0f, 1.0f, 1.0f});
+    rotation = glm::rotate(rotation, rot.x, glm::cross(m_lookDir, UP));
+    rotation = glm::rotate(rotation, rot.y, UP);
+    rotation = glm::rotate(rotation, rot.z, m_lookDir);
 
     glm::vec4 homo = {m_lookDir.x, m_lookDir.y, m_lookDir.z, 1.0f};
     homo = rotation * homo;
