@@ -1,9 +1,9 @@
-macro(recurse_files VAR REL GLOBEXPR)
+macro(recurse_folder VAR REL GLOBEXPR)
   file(GLOB_RECURSE ${VAR}
     RELATIVE "${REL}"
     CONFIGURE_DEPENDS 
     "${GLOBEXPR}")
-endmacro(recurse_files)
+endmacro(recurse_folder)
 
 macro(find_all_sources NAME)
   file(GLOB_RECURSE SOURCES

@@ -3,14 +3,14 @@ include(Macros)
 
 set(_SLANG "glsl430")
 
-macro(recurse_files VAR DIR GLOBEXPR)
+macro(recurse_folder VAR DIR GLOBEXPR)
   file(GLOB_RECURSE _SHADER_FILES
     RELATIVE "${DIR}"
     CONFIGURE_DEPENDS 
     "${GLOBEXPR}")
-endmacro(recurse_files)
+endmacro(recurse_folder)
 
-recurse_files(_SHADER_FILES "" "*.glsl")
+recurse_folder(_SHADER_FILES "" "*.glsl")
 
 foreach(SHADER IN LISTS _SHADER_FILES)
     add_custom_command(
