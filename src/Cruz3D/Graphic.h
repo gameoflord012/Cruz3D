@@ -10,3 +10,4 @@
 #include "Graphic/Material.h"
 #include "Graphic/Scene.h"
 #include "Graphic/Camera.h"
+#include "Graphic/Passes.h"

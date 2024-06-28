@@ -14,7 +14,7 @@ class SimplePass
     void Begin();
     void End();
 
-    void ApplyVSUniform(const ShaderDesc::BasicMVP_VS_Uniform &);
+    void ApplyVSUniform(const ShaderDesc::BasicMVP_VS_Uniforms &);
     void ApplyBinding(const SimpleBinding *);
     void Draw();
 

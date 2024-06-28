@@ -19,8 +19,8 @@ class Scene
 {
   public:
     Scene(const char *importPath);
-    unique_ptrs<Material> GetMaterials();
-    unique_ptrs<Mesh> GetMeshes();
+    unique_ptrs<Material> GetMaterials() const;
+    unique_ptrs<Mesh> GetMeshes() const;
 
   private:
     const char *m_fullPath;

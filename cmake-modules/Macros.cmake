@@ -1,10 +1,18 @@
+macro(recurse_files VAR REL GLOBEXPR)
+  file(GLOB_RECURSE ${VAR}
+    RELATIVE "${REL}"
+    CONFIGURE_DEPENDS 
+    "${GLOBEXPR}")
+endmacro(recurse_files)
+
 macro(find_all_sources NAME)
-file(GLOB_RECURSE SOURCES
-	RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-	CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.inl")
-if(SOURCES) 
-	list(APPEND "${NAME}" "${SOURCES}")
-endif(SOURCES)
+  file(GLOB_RECURSE SOURCES
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    CONFIGURE_DEPENDS 
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.inl")
+  if(SOURCES) 
+    list(APPEND "${NAME}" "${SOURCES}")
+  endif(SOURCES)
 endmacro(find_all_sources)
 
 macro(copy_target_dlls TARGET)

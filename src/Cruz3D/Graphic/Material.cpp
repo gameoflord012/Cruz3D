@@ -11,22 +11,30 @@ cruz::Material::Material(const aiMaterial &mat, std::string dir)
     {
         aiString texPath;
         assert(mat.GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == aiReturn_SUCCESS);
-
         m_diffuse = LoadSGImage(dir + '/' + texPath.C_Str());
     }
+
+    aiColor4D diffuseCol;
+    assert(aiGetMaterialColor(&mat, AI_MATKEY_COLOR_DIFFUSE, &diffuseCol) == aiReturn_SUCCESS);
+    m_diffuseColor = {diffuseCol.r, diffuseCol.g, diffuseCol.b, diffuseCol.a};
 }
 
 cruz::Material::~Material()
 {
-    for(auto img : m_loadedImgs)
+    for (auto img : m_loadedImgs)
     {
         stbi_image_free(img);
     }
 }
 
-sg_image_desc cruz::Material::GetDiffuse() const
+std::optional<sg_image_desc> cruz::Material::GetDiffuseTex() const
 {
     return m_diffuse;
+}
+
+std::optional<glm::vec4> cruz::Material::GetDiffuseCol() const
+{
+    return m_diffuseColor;
 }
 
 sg_image_desc cruz::Material::LoadSGImage(std::string path)

@@ -23,7 +23,7 @@ Scene::Scene(const char *importPath)
     }
 }
 
-unique_ptrs<Material> Scene::GetMaterials()
+unique_ptrs<Material> Scene::GetMaterials() const
 {
     unique_ptrs<Material> mats;
     std::string dir = GetDir(m_fullPath);
@@ -37,7 +37,7 @@ unique_ptrs<Material> Scene::GetMaterials()
     return mats;
 }
 
-unique_ptrs<Mesh> Scene::GetMeshes()
+unique_ptrs<Mesh> Scene::GetMeshes() const
 {
     unique_ptrs<Mesh> meshes;
 

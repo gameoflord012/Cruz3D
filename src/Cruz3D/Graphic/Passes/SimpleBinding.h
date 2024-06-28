@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sokol/sokol_gfx.h>
+#include <glm/vec4.hpp>
 
 namespace cruz
 {
@@ -10,6 +11,11 @@ class Material;
 class SimpleBinding
 {
   public:
+    struct Material_FS_Uniforms
+    {
+        glm::vec4 diffuseColor;
+    };
+
     SimpleBinding(const Mesh &mesh, const Material &mat);
     ~SimpleBinding();
 
@@ -21,6 +27,6 @@ class SimpleBinding
     sg_bindings m_bindings;
     sg_image m_image;
     sg_sampler m_sampler;
-    sg_buffer m_ibuf, m_vbuf;
+    sg_buffer m_ibuf, m_vbuf, m_sbuf;
 };
 } // namespace cruz

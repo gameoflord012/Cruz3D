@@ -29,7 +29,7 @@ void cruz::SimplePass::End()
     sg_end_pass();
 }
 
-void cruz::SimplePass::ApplyVSUniform(const ShaderDesc::BasicMVP_VS_Uniform &params)
+void cruz::SimplePass::ApplyVSUniform(const ShaderDesc::BasicMVP_VS_Uniforms &params)
 {
     sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(params));
 }

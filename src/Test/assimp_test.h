@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GameObjects.h"
+
 #define CRUZ_IMPL
 #include <Cruz3D/Cruz3D.h>
 #undef CRUZ_IMPL
@@ -19,14 +21,11 @@
 #include <cstdio>
 #include <memory>
 
-static cruz::unique_ptrs<cruz::Mesh> s_meshes; // array of meshes
-static cruz::unique_ptrs<cruz::Material> s_mats;
+static cruz::Camera *g_cam;
+static cruz::SimplePass *g_pass;
 
-static cruz::Scene *s_scene;
-static cruz::SimplePass *s_pass;
-static cruz::SimpleBinding *s_binding;
-
-static cruz::Camera *s_cam;
+static game::Trash g_trash;
+static game::Checkboard g_checkboard;
 
 // ███████╗██╗░░░██╗███╗░░██╗░█████╗░████████╗██╗░█████╗░███╗░░██╗░██████╗
 // ██╔════╝██║░░░██║████╗░██║██╔══██╗╚══██╔══╝██║██╔══██╗████╗░██║██╔════╝
@@ -37,13 +36,24 @@ static cruz::Camera *s_cam;
 
 static void InitData()
 {
-    s_cam = new cruz::Camera(sapp_widthf() / sapp_heightf());
-    s_scene = new cruz::Scene(CRUZ_DATA_DIR "/metal_trash_can_4k.obj");
-    s_meshes = s_scene->GetMeshes();
-    s_mats = s_scene->GetMaterials();
+    g_cam = new cruz::Camera(sapp_widthf() / sapp_heightf());
+    g_pass = new cruz::SimplePass();
 
-    s_pass = new cruz::SimplePass();
-    s_binding = new cruz::SimpleBinding(*s_meshes[2], *s_mats[1]);
+    // init trash game object
+    {
+        const cruz::Scene scene(CRUZ_DATA_DIR "/metal_trash_can_4k.obj");
+        cruz::unique_ptrs<cruz::Mesh> meshes = scene.GetMeshes();
+        cruz::unique_ptrs<cruz::Material> materials = scene.GetMaterials();
+        g_trash.binding = std::make_unique<cruz::SimpleBinding>(*meshes[2], *materials[1]);
+    }
+
+    // init checkboard game object
+    {
+        const cruz::Scene scene(CRUZ_DATA_DIR "/checker_board.obj");
+        cruz::unique_ptrs<cruz::Mesh> meshes = scene.GetMeshes();
+        cruz::unique_ptrs<cruz::Material> materials = scene.GetMaterials();
+        g_checkboard.binding = std::make_unique<cruz::SimpleBinding>(*meshes[1], *materials[0]);
+    }
 }
 
 static void UpdateCameraMovement()
@@ -67,11 +77,11 @@ static void UpdateCameraMovement()
     }
 
     float delta = (float)sapp_frame_duration();
-    s_cam->MoveRel(glm::vec3(mX, mY, mZ) * delta * cruz::settings::CAMERA_MOVESPEED);
+    g_cam->MoveRel(glm::vec3(mX, mY, mZ) * delta * cruz::settings::CAMERA_MOVESPEED);
 
     if (INPUT_INS.IsMouseMoving() && INPUT_INS.IsMouseDown(SAPP_MOUSEBUTTON_MIDDLE))
     {
-        s_cam->Rotate(glm::vec3(INPUT_INS.GetMouseDelta().y, INPUT_INS.GetMouseDelta().x, 0.0f) * delta *
+        g_cam->Rotate(glm::vec3(INPUT_INS.GetMouseDelta().y, INPUT_INS.GetMouseDelta().x, 0.0f) * delta *
                       cruz::settings::MOUSE_SENSITIVITY);
     }
 }
@@ -109,13 +119,13 @@ static void sokol_frame()
     model = glm::rotate(model, s_rx, {1.0f, 0.0f, 0.0f});
     model = glm::rotate(model, s_ry, {0.0f, 1.0f, 0.0f});
 
-    s_pass->Begin();
+    g_pass->Begin();
     {
-        s_pass->ApplyBinding(s_binding);
-        s_pass->ApplyVSUniform({.mvp = s_cam->GetProjView() * model});
-        s_pass->Draw();
+        g_pass->ApplyVSUniform({.mvp = g_cam->GetProjView() * model});
+        g_pass->ApplyBinding(g_trash.binding.get());
+        g_pass->Draw();
     }
-    s_pass->End();
+    g_pass->End();
 }
 
 static void sokol_cleanup()

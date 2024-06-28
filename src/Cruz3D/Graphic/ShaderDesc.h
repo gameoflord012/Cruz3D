@@ -9,7 +9,7 @@ namespace cruz
 {
 namespace ShaderDesc
 {
-struct BasicMVP_VS_Uniform
+struct BasicMVP_VS_Uniforms
 {
     glm::mat4x4 mvp;
 };
@@ -38,7 +38,7 @@ static std::unordered_map<std::string, sg_shader_desc> Descs{
             .vs
             {
                 .source = R"(
-#version 330
+#version 460
 
 uniform mat4 mvp;
 layout(location=0) in vec4 position;
@@ -58,7 +58,7 @@ void main() {
                 .uniform_blocks 
                 {
                     {
-                        .size = sizeof(BasicMVP_VS_Uniform),
+                        .size = sizeof(BasicMVP_VS_Uniforms),
                         .uniforms = {{.name = "mvp", .type = SG_UNIFORMTYPE_MAT4}}
                     }
                 }
@@ -67,9 +67,13 @@ void main() {
             .fs 
             {
                 .source = R"(
-#version 330
+#version 460
 
 uniform sampler2D tex;
+layout (binding = 8) buffer Material
+{
+    vec4 diffuseColor;
+};
 
 in vec4 color;
 in vec2 uv;
@@ -77,12 +81,14 @@ in vec2 uv;
 out vec4 frag_color;
 
 void main() {
-    frag_color = texture(tex, uv) * color;
+    frag_color = texture(tex, uv) * color * diffuseColor;
 }
 )",
-                .images = { { .used = true } },
-                .samplers = { { .used = true } },
-                .image_sampler_pairs = { { .used = true, .image_slot = 0, .sampler_slot = 0, .glsl_name = "tex" } },
+                
+                .storage_buffers { { .used = true, .readonly = true } },
+                .images { { .used = true } },
+                .samplers { { .used = true } },
+                .image_sampler_pairs { { .used = true, .image_slot = 0, .sampler_slot = 0, .glsl_name = "tex" } },
             }
         }
     },

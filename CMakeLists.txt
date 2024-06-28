@@ -4,6 +4,12 @@ project (Cruz3D)
 set(CRUZ_DATA_DIR		"${PROJECT_SOURCE_DIR}/data")
 set(CRUZ_THIRDPARTY_DIR "${PROJECT_SOURCE_DIR}/thirdparty")
 
+if(WIN32)
+  set(CRUZ_TOOLS_DIR "${PROJECT_SOURCE_DIR}/tools/win32")
+else(WIN32)
+  message(SEND_ERROR "You can't do that" )
+endif(WIN32)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(
